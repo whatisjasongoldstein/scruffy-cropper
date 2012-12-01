@@ -25,7 +25,8 @@ class Crop(models.Model):
         extension = split_file_name[0]
 
         # Build filename
-        image.name = "{model}.{field}.{ext}".format(model=obj._meta.db_table, field=self.field, ext=extension)
+        image.name = "{model}.{obj}.{field}.{ext}".format(
+            model=obj._meta.db_table, obj=self.object_id, field=self.field, ext=extension)
 
         # Save to model
         self.image = image

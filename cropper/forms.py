@@ -29,7 +29,7 @@ class CropImageForm(forms.Form):
     required_css_class = 'required'
 
     def _parse_crop_coords(self, coords):
-        
+        """ Translate coordinates (hiddenfield or charfield) into an integer list. """
         if not coords:
             return None
 
@@ -43,6 +43,7 @@ class CropImageForm(forms.Form):
 
         # Make tuple of tuple and return
         return parts
+
 
     def clean(self):
         cleaned_data = super(CropImageForm, self).clean()
