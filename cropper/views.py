@@ -8,31 +8,23 @@ from cropper.models import Crop
 from cropper.forms import CropImageForm
 
 
-def delete_crop(request, app, model_name, obj_id, field, redirect_to="/"):
-    """ Delete a crop. """
-    
-    # Get the crop for this field on this object.
-    model = get_object_or_404(ContentType, app_label=app, name=model_name)
-    crop = get_object_or_404(Crop, content_type=model, object_id=obj_id, field=field)
-
-    crop.delete()
-
-    return redirect(redirect_to)
-
-
-
-def create_crop(request, app, model_name, object_id, field, template='cropper/crop.html'):
+def create_crop(request, app, model_name, object_id, field, template='cropper/crop.html', delete_redirect=None):
     """ Create a crop, or edit an existing one. This is an example of a wrapping view.
 
     Notice there is no security around this view. I would not call it directly without a wrapper
     view or decorator that ensures it's okay for the user to access it.
+
     """
 
     # Get the object we want to work with
     model = get_model(app, model_name)
     obj = get_object_or_404(model, id=object_id)
 
-    # get_object_or_404(Account, project_name=userslug)
+    # So we can reuse this view, passing 'delete' in GET will kill it and abort
+    if 'delete' in request.GET:
+        crop = Crop.objects.filter(object_id=obj.id, content_type=ContentType.objects.get_for_model(obj), field=field)
+        crop.delete()
+        return redirect(delete_redirect or '/')
 
     # Get any existing crop coordinates to pass along
     coordinates = Crop.objects.get_or_create(object_id = obj.id, 
