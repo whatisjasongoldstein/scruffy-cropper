@@ -18,9 +18,12 @@
             {{ form.as_p }}
         </div>
         <div class="section controls">
-            <input class="button" type="submit" value="Save Crop">
-            <a class="button" href="#">Remove Crop</a>
-            <a class="del button" href="{% url change_theme userslug=site.project_name %}">Cancel</a>
+            <input class="button" name="save" type="submit" value="Save Crop" default>
+            
+            {% if coordinates %}            
+                <input class="button" type="submit" name="delete" value="Remove Copy">
+            {% endif %}
+
         </div>
     </form>
     

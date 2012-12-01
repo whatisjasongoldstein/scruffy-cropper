@@ -21,7 +21,7 @@ def create_crop(request, app, model_name, object_id, field, template='cropper/cr
     obj = get_object_or_404(model, id=object_id)
 
     # So we can reuse this view, passing 'delete' in GET will kill it and abort
-    if 'delete' in request.GET:
+    if 'delete' in request.POST:
         crop = Crop.objects.filter(object_id=obj.id, content_type=ContentType.objects.get_for_model(obj), field=field)
         crop.delete()
         return redirect(delete_redirect or '/')
