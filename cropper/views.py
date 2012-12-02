@@ -8,7 +8,7 @@ from cropper.models import Crop
 from cropper.forms import CropImageForm
 
 
-def create_crop(request, app, model_name, object_id, field, template='cropper/crop.html', delete_redirect=None):
+def create_crop(request, app, model_name, object_id, field, template='cropper/crop.html', post_save_redirect=None):
     """ Create a crop, or edit an existing one. This is an example of a wrapping view.
 
     Notice there is no security around this view. I would not call it directly without a wrapper
@@ -24,7 +24,8 @@ def create_crop(request, app, model_name, object_id, field, template='cropper/cr
     if 'delete' in request.POST:
         crop = Crop.objects.filter(object_id=obj.id, content_type=ContentType.objects.get_for_model(obj), field=field)
         crop.delete()
-        return redirect(delete_redirect or '/')
+        messages.add_message(request, messages.SUCCESS, 'No crop? No problem..')
+        return redirect(post_save_redirect or '/')
 
     # Get any existing crop coordinates to pass along
     coordinates = Crop.objects.get_or_create(object_id = obj.id, 
@@ -39,8 +40,9 @@ def create_crop(request, app, model_name, object_id, field, template='cropper/cr
             crop = form.save()
             coordinates = crop.coordinates
             messages.add_message(request, messages.SUCCESS, 'Crop saved! That was easy.')
+            return redirect(post_save_redirect or '/')
         else:
-            messages.add_message(request, messages.ERROR, "WTF? Something is wrong.")
+            messages.add_message(request, messages.ERROR, "Not a valid crop.")
 
     return render(request, template, {
             'form': form,
