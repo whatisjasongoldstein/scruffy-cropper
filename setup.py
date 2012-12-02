@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='Scruffy Cropper',
-    version="0.1.1",
+    version="0.1.2",
     author='Jason Goldstein',
     author_email='jason@betheshoe.com',
     url='https://bitbucket.org/whatisjasongoldstein/django-cropper',

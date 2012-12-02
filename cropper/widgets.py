@@ -1,7 +1,6 @@
-from django.forms.widgets import ClearableFileInput, CheckboxInput
+from django.forms import ClearableFileInput, CheckboxInput
 from django.utils.safestring import mark_safe
 from django.template import Template, Context
-
 
 def _snippet(template="", context={}):
     """ Simple template render """
