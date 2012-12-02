@@ -79,12 +79,15 @@
 
             };
 
-            // How easy is this??
-            image.Jcrop({
-                {% if coordinates %}setSelect: _unconvert_crop("{{ coordinates }}"),{% endif %}
-                onChange: record_args,
-                onSelect: record_args
+            // It's very important that this is deferred until media is loaded
+            $(window).load(function () {
+                image.Jcrop({
+                    {% if coordinates %}setSelect: _unconvert_crop("{{ coordinates }}"),{% endif %}
+                    onChange: record_args,
+                    onSelect: record_args
+                });
             });
+
 
             return {}
         }();
