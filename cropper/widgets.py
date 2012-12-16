@@ -1,5 +1,6 @@
 from django.forms import ClearableFileInput, CheckboxInput
 from django.utils.safestring import mark_safe
+from django.template.defaultfilters import urlencode
 from django.template import Template, Context
 
 def _snippet(template="", context={}):
@@ -15,9 +16,11 @@ class CropImageWidget(ClearableFileInput):
 
     def _crop_button(self, substitutions):
         link = self.attrs.get('data-crop-url')
+        post_save_link = urlencode(self.attrs.get('post-save-redirect') or "")
+
         if not link:
             return ""
-        return """<a class="button" href="%s">Crop</a>""" % link
+        return """<a class="button" href="%s?post-save-redirect=%s">Crop</a>""" % (link, post_save_link)
 
     def render(self, name, value, attrs=None):
 

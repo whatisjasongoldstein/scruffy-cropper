@@ -18,6 +18,7 @@
             {{ form.as_p }}
         </div>
         <div class="section controls">
+            <input type="hidden" name="post-save-redirect" value="{{ post_save_redirect }}">
             <input class="button" name="save" type="submit" value="Save Crop" default>
             
             {% if coordinates %}            
