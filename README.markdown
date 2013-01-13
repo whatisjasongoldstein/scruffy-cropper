@@ -68,13 +68,9 @@ I also override save to ensure old crops are removed if the photo changes:
 
 In the future some of this stuff might be inheritable... that'd be cool.
 
-### The Shameful Widgets Module
+### Other requirements
 
-Um... um... Okay, you've got me on this one. It's pretty gross. I'm really paricular about form styling - I want nice looking upload buttons, a 'currently' slot, clearing that I can actually put where I want it, thumbnails, and yes, now a crop button.
-
-Django Forms are both awesome and royally suck when you try to extend them. Suggestions on sucking less are welcome.
-
-It also assumes you use easy-thumbnails.
+It also assumes you use easy-thumbnails. But anything (solr-thumbnails) that uses the same API should work fine.
 
 
 ### Other Notes
