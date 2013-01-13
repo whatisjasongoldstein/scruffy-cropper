@@ -2,11 +2,11 @@ from distutils.core import setup
 
 setup(
     name='Scruffy Cropper',
-    version="0.2.0",
+    version="0.2.1",
     author='Jason Goldstein',
     author_email='jason@betheshoe.com',
     url='https://bitbucket.org/whatisjasongoldstein/django-cropper',
-    packages=['cropper', 'cropper.migrations', 'cropper.templates', ],
+    packages=['cropper', 'cropper.migrations', ],
     description='Generic cropping utility for Django, plays nicely with any imagefield.',
     long_description=open('README.markdown').read(),
 )
