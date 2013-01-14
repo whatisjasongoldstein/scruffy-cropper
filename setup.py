@@ -7,7 +7,7 @@ setup(
     author_email='jason@betheshoe.com',
     url='https://bitbucket.org/whatisjasongoldstein/django-cropper',
     packages=['cropper', 'cropper.migrations', ],
-    package_data={ 'cropper': ['templates/*',] },
+    package_data={ 'cropper': ['templates/cropper/*',] },
     description='Generic cropping utility for Django, plays nicely with any imagefield.',
     long_description=open('README.markdown').read(),
 )
