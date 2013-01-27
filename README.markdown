@@ -30,43 +30,35 @@ The main view is **cropper.views.create_crop**, and while you could point a URL 
         # Args in order: request, app_label, model name, model instance id, field name, template, and the url to go post save or delete
         return create_crop(request, 'my_app_label', 'foo', obj.id, 'photo', 'my_crop_template.html', post_save_redirect=next)
 
+### Helpers
+
+I've included some helper methods to help keep GFK dirt out of your code. They are...
+
+    from cropper.helpers import get_or_create_crop, get_cropped_image, delete_crop
+
+They all take a model instance and a field name (as a string).
+
+
 ### Meanwhile, back at the models.py
+
+Your model should subclass CroppableImageMixin. It overrides save to wipe out any obsolete crops if you update one of your croppable images.
 
 Now we're in a state where we may or may not have a cropped image... so let's add a property of the model to handle that.
 
-    class Foo(models.Model):
+    from cropper.models import CroppableImageMixin
+    from cropper.helpers import get_cropped_image
+
+    class Foo(CroppableImageMixin):
         photo = models.ImageField(...)
 
         @property
         def cropped_photo(self):
         """ Return the photo, look for a cropped version first. """
-        crops = Crop.objects.filter(content_type=ContentType.objects.get(app_label="my_app", model="foo"), 
-            object_id=self.id, field='photo')
-        if crops:
-            return crops[0].image
-        return self.photo
+        crop = get_cropped_image(self, 'photo')  # Returns None if there's no cropped version.
+        return crop or self.photo
 
 And then in the template - or anywhere else for that matter - foo.cropped_photo will always return what you want.
 
-I also override save to ensure old crops are removed if the photo changes:
-
-    def save(self, *args, **kwargs):
-        """ Delete any crops if an image changes. """
-
-        if self.id: # only existing versions
-            croppable_fields = ['photo',]
-            old = Foo.objects.get(id=self.id)  # Existing version of the object we're about to save
-            for field in croppable_fields:
-                if getattr(self, field).name != getattr(old, field).name: # If the file is different
-                    Crop.objects.filter(
-                        content_type=ContentType.objects.get(app_label="my_app", model="foo"), 
-                        object_id=self.id, 
-                        field=field
-                    ).delete()  # Wipe out whatever applies
-
-        return super(Foo, self).save(*args, **kwargs)
-
-In the future some of this stuff might be inheritable... that'd be cool.
 
 ### Other requirements
 
