@@ -5,7 +5,7 @@ setup(
     version="0.3.1",
     author='Jason Goldstein',
     author_email='jason@betheshoe.com',
-    url='https://bitbucket.org/whatisjasongoldstein/django-cropper',
+    url='https://bitbucket.org/whatisjasongoldstein/scruffy-cropper',
     packages=['cropper', 'cropper.migrations', ],
     package_data={ 'cropper': ['templates/cropper/*',] },
     description='Generic cropping utility for Django, plays nicely with any imagefield.',
