@@ -2,12 +2,12 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from cropper.models import Crop
 
-ROTATE_OPTIONS = (
-    (0, ''),
-    (90, '90 degrees clockwise'),
-    (270, '90 degrees counter-clockwise'),
-    (180, '180 degrees'),
-)
+# ROTATE_OPTIONS = (
+#     (0, ''),
+#     (90, '90 degrees clockwise'),
+#     (270, '90 degrees counter-clockwise'),
+#     (180, '180 degrees'),
+# )
 
 
 class CropImageForm(forms.Form):

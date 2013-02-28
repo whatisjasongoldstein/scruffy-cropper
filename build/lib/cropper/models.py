@@ -4,6 +4,25 @@ from django.core.files.base import ContentFile
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
+
+class CroppableImageMixin(models.Model):
+    """ Handles post save logic for models that have croppable image fields. """
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        """ Delete any crops if an image changes. """
+        from cropper.helpers import delete_crop
+        if self.id: # only existing versions
+            croppable_fields = [field for field in self._meta.fields if field.__class__.__name__ == "ImageField"]
+            old = self.__class__.objects.get(id=self.id)  # Before this save
+            for field in croppable_fields:
+                if getattr(self, field.name) != getattr(old, field.name): # If the file is different
+                    delete_crop(self, field.name)  # Wipe out whatever applies
+        return super(CroppableImageMixin, self).save(*args, **kwargs)
+        
+
 class Crop(models.Model):
     """ A cropped version of an imagefield from another model. """
     content_type = models.ForeignKey(ContentType)
