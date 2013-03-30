@@ -17,7 +17,6 @@ def create_crop(request, app, model_name, object_id, field, template='cropper/cr
     # Get the object we want to work with
     model = get_model(app, model_name)
     obj = get_object_or_404(model, id=object_id)
-
     # So we can reuse this view, passing 'delete' in GET will kill it and abort
     if 'delete' in request.POST:
         delete_crop(obj, field)

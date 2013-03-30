@@ -39,9 +39,12 @@ class Crop(models.Model):
         image = ContentFile(field.file.read())
 
         # Get extension
-        split_file_name = field.file.name.split('.')
-        split_file_name.reverse()
-        extension = split_file_name[0]
+        if "." in field.file.name:
+            split_file_name = field.file.name.split('.')
+            split_file_name.reverse()
+            extension = split_file_name[0]
+        else:
+            extension = "jpg"
 
         # Build filename
         image.name = "{model}.{obj}.{field}.{ext}".format(
