@@ -53,16 +53,16 @@ Now we're in a state where we may or may not have a cropped image... so let's ad
 
         @property
         def cropped_photo(self):
-        """ Return the photo, look for a cropped version first. """
-        crop = get_cropped_image(self, 'photo')  # Returns None if there's no cropped version.
-        return crop or self.photo
+            """ Return the photo, look for a cropped version first. """
+            crop = get_cropped_image(self, 'photo')  # Returns None if there's no cropped version.
+            return crop or self.photo
 
 And then in the template - or anywhere else for that matter - foo.cropped_photo will always return what you want.
 
 
 ### Other requirements
 
-It also assumes you use easy-thumbnails. But anything (solr-thumbnails) that uses the same API should work fine.
+It also assumes you use [easy-thumbnails](https://github.com/SmileyChris/easy-thumbnails). But anything (solr-thumbnails) that uses the same API should work fine.
 
 
 ### Other Notes
