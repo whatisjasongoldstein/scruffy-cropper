@@ -1,43 +1,68 @@
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.db.models.loading import get_model
-from cropper.forms import CropImageForm
-from cropper.helpers import get_or_create_crop, delete_crop
+from django.views.generic import View
+from django.utils.functional import cached_property
+from .forms import CropImageForm
+from .helpers import get_or_create_crop, delete_crop
 
 
-def create_crop(request, app, model_name, object_id, field, template='cropper/crop.html', post_save_redirect="/"):
-    """
-    Create a crop, or edit an existing one. This is an example of a wrapping view.
+class CropView(View):
+    base_template = "admin/base_site.html"
+    template_name = "cropper/crop.html"
+    post_save_redirect = "/"
+    
 
-    Notice there is no security around this view. I would not call it directly without a wrapper
-    view or decorator that ensures it's okay for the user to access it.
+    def dispatch(self, request, *args, **kwargs):
 
-    """
+        self.app = self.kwargs['app']
+        self.model_name = self.kwargs['model']
+        self.field = self.kwargs['field']
+        self.coordinates = None
 
-    # Get the object we want to work with
-    model = get_model(app, model_name)
-    obj = get_object_or_404(model, id=object_id)
-    # So we can reuse this view, passing 'delete' in GET will kill it and abort
-    if 'delete' in request.POST:
-        delete_crop(obj, field)
-        messages.add_message(request, messages.SUCCESS, 'No crop? No problem..')
-        return redirect(post_save_redirect)
+        self.model = get_model(self.app, self.model_name)
+        if not self.model: # No clue what this model is.
+            raise Http404()
 
-    # Get any existing crop coordinates to pass along
-    coordinates = get_or_create_crop(obj, field).coordinates
+        self.obj = get_object_or_404(self.model, id=self.kwargs['obj_id'])
 
-    form = CropImageForm(request.POST or None, coordinates=coordinates, model=obj, field=field)
+        # Could be in either GET or POST. Don't do this at home.
+        generic_params = request.GET or request.POST
+        self.post_save_redirect = generic_params.get('post-save-redirect')
 
-    if request.POST:
+        return super(CropView, self).dispatch(request, *args, **kwargs)
+
+
+    def get_form(self, data):
+        if hasattr(self, '_form'):
+            return self._form
+        self.coordinates = get_or_create_crop(self.obj, self.field).coordinates
+        self._form = CropImageForm(data, coordinates=self.coordinates, model=self.obj, field=self.field)
+        return self._form
+
+    def get(self, request, **kwargs):
+        form = self.get_form(None)
+        return render(request, self.template_name, {
+                'form': form,
+                'coordinates': self.coordinates,
+                'post_save_redirect': self.post_save_redirect,
+                'base_template': self.base_template,
+            })
+
+    def post(self, request, **kwargs):
+
+        # So we can reuse this view, passing 'delete' in POST will kill it and abort
+        if 'delete' in request.POST:
+            delete_crop(self.obj, self.field)
+            messages.add_message(request, messages.SUCCESS, 'No crop? No problem..')
+            return redirect(self.post_save_redirect)
+
+        form = self.get_form(request.POST)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, 'Crop saved! That was easy.')
-            return redirect(post_save_redirect)
-        else:
-            messages.add_message(request, messages.ERROR, "Not a valid crop.")
+            return redirect(self.post_save_redirect)
 
-    return render(request, template, {
-            'form': form,
-            'coordinates': coordinates,
-            'post_save_redirect': post_save_redirect,
-        })
+        messages.add_message(request, messages.ERROR, "Not a valid crop.")
+        return self.get(request, **kwargs)

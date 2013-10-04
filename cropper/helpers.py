@@ -1,5 +1,5 @@
-from cropper.models import Crop
 from django.contrib.contenttypes.models import ContentType
+from .models import Crop
 
 
 def get_or_create_crop(obj, field_name):

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from cropper.models import Crop
+from .models import Crop
 
 # ROTATE_OPTIONS = (
 #     (0, ''),

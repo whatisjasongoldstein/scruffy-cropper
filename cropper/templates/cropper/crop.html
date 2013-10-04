@@ -1,16 +1,15 @@
-{% load thumbnails %}
-<html>
-<head>
-    <title>An Example jCrop Template</title>
-</head>
+{% extends base_template %}
+{% load thumbnail compress %}
 
+{% block extrahead %}
     <style type="text/css">
         @import url('{{ STATIC_URL }}jcrop/css/jquery.Jcrop.css');
     </style>
-<body>
-    <h1>Crop Image</h1>
-    <p>This is an example. Obviously, you'll want to write your own so it fits your site's style and structure.</p>
+{% endblock extrahead %}
 
+{% block title %}Crop an Image{% endblock title %}
+
+{% block content %}
     <form class="form" enctype="multipart/form-data" action="." method="post">
         {% csrf_token %}
         <div class="section">
@@ -28,9 +27,8 @@
         </div>
     </form>
     
-
+    <script src="{{ STATIC_URL }}jquery/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}jcrop/js/jquery.Jcrop.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}jcrop/js/jquery.color.js" type="text/javascript"></script>
     <script type="text/javascript">
 
         var DjangoCropper = function(){
@@ -93,5 +91,4 @@
             return {}
         }();
     </script>
-</body>
-</html>
+{% endblock content %}

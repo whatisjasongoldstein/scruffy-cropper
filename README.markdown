@@ -1,7 +1,10 @@
 Scruffy Cropper for Django
 ==========================
 
-A reusable part to let users crop their uploaded images. On the front end, I'm using [jCrop](http://deepliquid.com/content/Jcrop.html) on the front end, PIL in back.
+** Rewritten to take advantage of Class Based Views and Bower. Seems to work. Updated docs and tests to come. **
+
+
+A reusable part to let users crop their uploaded images.
 
 ## Usage
 
