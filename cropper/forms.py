@@ -23,9 +23,7 @@ class CropImageForm(forms.Form):
         self.fields['crop'].initial = self.coordinates or ""
         self.fields['crop'].widget = forms.HiddenInput()
 
-    crop = forms.CharField()
-    # rotate = forms.ChoiceField(required=False, choices=ROTATE_OPTIONS) # Maybe implement later
-    
+    crop = forms.CharField()    
     required_css_class = 'required'
 
     def _parse_crop_coords(self, coords):

@@ -64,3 +64,4 @@ class Crop(models.Model):
         coordinates = [int(point) for point in self.coordinates.split(',')]
         im = im.crop(coordinates)
         im.save(self.image.file.name)
+
