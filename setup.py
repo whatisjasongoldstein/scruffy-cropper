@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='Scruffy Cropper',
-    version="1.0.0",
+    version="2.0.0",
     author='Jason Goldstein',
     author_email='jason@betheshoe.com',
     url='https://bitbucket.org/whatisjasongoldstein/scruffy-cropper',
