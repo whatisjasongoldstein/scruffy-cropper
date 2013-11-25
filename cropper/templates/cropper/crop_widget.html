@@ -2,7 +2,7 @@
 <span class="imgWidget">
     {% if value %} 
         <b class="thumb">
-            <img src="{% thumbnail value "75x75" %}">
+            <img src="{% thumbnail value "100x100" crop=",9" %}">
         </b>
     {% endif %}
     <i class="context">
