@@ -29,7 +29,7 @@ class CropView(View):
 
         # Could be in either GET or POST. Don't do this at home.
         generic_params = request.GET or request.POST
-        self.post_save_redirect = generic_params.get('post-save-redirect') or "/"
+        self.post_save_redirect = generic_params.get('post-save-redirect') or self.post_save_redirect
 
         return super(CropView, self).dispatch(request, *args, **kwargs)
 
