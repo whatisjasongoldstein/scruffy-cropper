@@ -1,4 +1,5 @@
 import PIL
+import hashlib
 from django.db import models
 from django.core.files.base import ContentFile
 from django.contrib.contenttypes.models import ContentType
@@ -46,9 +47,14 @@ class Crop(models.Model):
         else:
             extension = "jpg"
 
+        # Make hash filename to ensure uniqueness
+        filename_hash = hashlib.md5(field.file.name)
+        filename_hash = filename_hash.hexdigest()
+
         # Build filename
-        image.name = "{model}.{obj}.{field}.{ext}".format(
-            model=obj._meta.db_table, obj=self.object_id, field=self.field, ext=extension)
+        image.name = "{model}.{obj}.{field}.{filename}.{ext}".format(
+            model=obj._meta.db_table, obj=self.object_id, field=self.field, 
+            ext=extension, filename=filename_hash)
 
         # Save to model
         self.image = image
