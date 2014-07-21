@@ -13,7 +13,7 @@
     <form class="form" enctype="multipart/form-data" action="." method="post">
         {% csrf_token %}
         <div class="section">
-            <img id="crop-img" class="cover" src="{% thumbnail form.image 640x640 %}">
+            <img id="crop-img" class="cover" src="{{ image }}">
             {{ form.as_p }}
         </div>
         <div class="section controls">

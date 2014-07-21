@@ -1,6 +1,8 @@
 import PIL
 import hashlib
 from django.db import models
+from django.utils.functional import cached_property
+from django.core.cache import cache
 from django.core.files.base import ContentFile
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -63,6 +65,20 @@ class Crop(models.Model):
         # if self.coordinates:
         self._crop_image()
 
+
+    @cached_property
+    def dimensions(self):
+        """
+        Looking this up requires opening the image in PIL.
+        Cache it forever.
+        """
+        img_field = getattr(self.content_object, self.field)
+        key = "scruffycropper.dimensions.{}".format(hashlib.md5(self.image.name).hexdigest())
+        dimensions = cache.get(key)
+        if not dimensions:
+            dimensions = [img_field.width, img_field.height]
+            cache.set(key, dimensions)
+        return dimensions
 
     def _crop_image(self):
         """ Does the PIL work. """
