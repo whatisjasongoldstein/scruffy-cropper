@@ -14,9 +14,10 @@ var CropperView = Class.extend({
 
     init: function(data) {
         this.data = data;
+        this.url = data.url;
         this.template = _.template([
             "<div class='crop-anywhere'>",
-            "<img src=\"<%= image %>\" />",
+                "<img src=\"<%= image %>\" />",
                 "<button class=\"save-crop\">Save Crop</button>",
                 "<button class=\"remove-crop\">Remove Crop</button>",
             "</div>"
@@ -24,6 +25,19 @@ var CropperView = Class.extend({
 
         this.coordinates = this.data.coordinates;
 
+    },
+
+    /**
+     * Call the API again and reshow the element.
+     */
+    reload: function() {
+        if (this.$el.not(":visible")) {
+            $.get(this.url, function(resp){
+                this.init(resp);
+                this.$el.show();
+                
+            }.bind(this));
+        }
     },
 
     setupEvents: function() {
@@ -110,7 +124,7 @@ var CropperView = Class.extend({
      * Hide the widget
      */
     remove: function() {
-        this.$el.remove();
+        this.$el.hide();
     }
 });
 
@@ -121,6 +135,7 @@ $(document).on("click", ".crop-anywhere[data-crop-url]", function(e) {
 
     // If this is already up, don't reload it.
     if ($btn.data().cropper !== undefined) {
+        $btn.data().cropper.reload();
         return false;
     };
 
