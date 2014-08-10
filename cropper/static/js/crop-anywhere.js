@@ -140,9 +140,14 @@ $(document).on("click", ".crop-anywhere[data-crop-url]", function(e) {
     };
 
     var url = $btn.attr("data-crop-url");
+    var cropping_wrapper = $btn.attr("data-crop-container");
     $.get(url, function(resp) {
         var view = new CropperView(resp);
-        $btn.after(view.render());
+        if (cropping_wrapper) {
+            $(cropping_wrapper).html(view.render());
+        } else {
+            $btn.after(view.render());
+        }
         $btn.data().cropper = view;
     });
     return false;
