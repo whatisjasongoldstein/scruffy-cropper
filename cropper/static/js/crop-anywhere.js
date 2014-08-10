@@ -104,8 +104,10 @@ var CropperView = Class.extend({
      * Save changes
      */
     save: function() {
-        var data = "crop="+this.coordinates.join(",");
-        $.post(this.data.url, data);
+        if (!this.coordinates) {
+            var data = "crop="+this.coordinates.join(",");
+            $.post(this.data.url, data);
+        };
         this.remove();
         return false;
     },
@@ -114,6 +116,7 @@ var CropperView = Class.extend({
      * Unset the crop
      */
     delete: function() {
+        this.jcrop.release();
         var data = "delete=1";
         $.post(this.data.url, data);
         this.remove();
