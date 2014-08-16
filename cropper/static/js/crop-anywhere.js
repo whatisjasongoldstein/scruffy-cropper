@@ -1,7 +1,7 @@
 $.ajaxSetup({
     beforeSend: function(xhr, settings) {
         if (settings.type === "POST" && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
         }
     }
 });
@@ -57,9 +57,9 @@ var CropperView = Class.extend({
         var crop = [coords.x, coords.y, coords.x2, coords.y2];
         for (var i = crop.length - 1; i >= 0; i--) {
             crop[i] = Math.round(crop[i] * proportion);
-        };
+        }
 
-        var crop = [coords.x, coords.y, coords.x + coords.w, coords.y + coords.h];
+        crop = [coords.x, coords.y, coords.x + coords.w, coords.y + coords.h];
 
         this.coordinates = _.map(crop, function(i){
             return Math.round(i * (1 / proportion));
@@ -90,7 +90,7 @@ var CropperView = Class.extend({
             };
             if (this.data.coordinates) {
                 params.setSelect = this.getCoordinates();
-            };
+            }
             $(img).Jcrop(params);
             this.jcrop = $(this.img).data().Jcrop;
         }.bind(this, this.img);
@@ -104,10 +104,14 @@ var CropperView = Class.extend({
      * Save changes
      */
     save: function() {
-        if (!this.coordinates) {
-            var data = "crop="+this.coordinates.join(",");
+        if (this.coordinates) {
+            var coords = this.coordinates;
+            if (_.isArray(this.coordinates)) {
+                coords = coords.join(",");
+            }
+            var data = "crop="+coords;
             $.post(this.data.url, data);
-        };
+        }
         this.remove();
         return false;
     },
@@ -140,7 +144,7 @@ $(document).on("click", ".crop-anywhere[data-crop-url]", function(e) {
     if ($btn.data().cropper !== undefined) {
         $btn.data().cropper.reload();
         return false;
-    };
+    }
 
     var url = $btn.attr("data-crop-url");
     var cropping_wrapper = $btn.attr("data-crop-container");
