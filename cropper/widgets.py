@@ -7,6 +7,11 @@ from django.template.loader import render_to_string
 class CropImageWidget(ClearableFileInput):
     """ ClearableFileInput with thumbnails and crop. """
 
+    class Media:
+        css = {
+            "all": ("cropper/widgets.css",),
+        }
+
     def render(self, name, value, attrs=None):
 
         link = None
