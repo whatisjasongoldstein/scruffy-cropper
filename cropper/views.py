@@ -36,6 +36,10 @@ class CropBase(View):
         return self.request.GET or self.request.POST
 
     @cached_property
+    def post_save_redirect(self):
+        return self.params.get('post-save-redirect', '/')
+
+    @cached_property
     def crop(self):
         return get_or_create_crop(self.obj, self.field)
 
@@ -63,7 +67,6 @@ class CropView(CropBase):
     """Regular page-crop view."""
     base_template = "admin/base_site.html"
     template_name = "cropper/crop.html"
-    post_save_redirect = "/"
 
     def get(self, request, **kwargs):
         return render(request, self.template_name, self.context)
@@ -79,7 +82,7 @@ class CropView(CropBase):
         if self.form.is_valid():
             self.form.save()
             messages.add_message(request, messages.SUCCESS, 'Crop saved! That was easy.')
-            return redirect(self.params.get('post-save-redirect', self.post_save_redirect))
+            return redirect(self.post_save_redirect)
 
         messages.add_message(request, messages.ERROR, "Not a valid crop.")
         return self.get(request, **kwargs)
