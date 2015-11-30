@@ -5,7 +5,7 @@ from django.utils.functional import cached_property
 from django.core.cache import cache
 from django.core.files.base import ContentFile
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 class CroppableImageMixin(models.Model):
@@ -30,7 +30,7 @@ class Crop(models.Model):
     """ A cropped version of an imagefield from another model. """
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     field = models.CharField(max_length=255, help_text="The imagefield's name")
     image = models.ImageField(upload_to="crop/")

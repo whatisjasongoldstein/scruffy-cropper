@@ -2,7 +2,7 @@ import json
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.db.models.loading import get_model
+from django.apps import apps
 from django.views.generic import View
 from django.utils.functional import cached_property
 
@@ -16,7 +16,7 @@ class CropBase(View):
 
     @cached_property
     def model(self):
-        model = get_model(self.kwargs['app'], self.kwargs['model'])
+        model = apps.get_model(self.kwargs['app'], self.kwargs['model'])
         if not model:
             raise Http404()
         return model
